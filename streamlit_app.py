@@ -67,4 +67,8 @@ def main():
             st.error(f"{number_to_check}는 소수가 아닙니다.")
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
+=======
+    main()
+>>>>>>> f35fb54a8a9c600d7ee98b97de816d1d70b15f32
