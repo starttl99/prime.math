@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소수 탐험대 (Prime Explorers)</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="language-toggle">
+                <button class="language-btn active" data-lang="ko">한국어</button>
+                <button class="language-btn" data-lang="en">English</button>
+            </div>
+            <h1 class="main-title">
+                <span class="ko">소수 탐험대</span>
+                <span class="en hidden">Prime Explorers</span>
+            </h1>
+            <p class="subtitle">
+                <span class="ko">소수와 합성수의 세계로 떠나는 신나는 모험!</span>
+                <span class="en hidden">An exciting adventure into the world of prime and composite numbers!</span>
+            </p>
+        </header>
+        
+        <div class="modules">
+            <div class="module-card" id="sieve-module">
+                <div class="module-header">
+                    <h2>
+                        <span class="ko">에라토스테네스의 체</span>
+                        <span class="en hidden">Sieve of Eratosthenes</span>
+                    </h2>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        <span class="ko">고대 그리스의 수학자 에라토스테네스가 발명한 소수를 찾는 방법을 배워보세요!</span>
+                        <span class="en hidden">Learn the method invented by ancient Greek mathematician Eratosthenes to find prime numbers!</span>
+                    </p>
+                    <button class="btn" id="start-sieve">
+                        <span class="ko">시작하기</span>
+                        <span class="en hidden">Start</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="module-card" id="classifier-module">
+                <div class="module-header">
+                    <h2>
+                        <span class="ko">숫자 분류기</span>
+                        <span class="en hidden">Number Classifier</span>
+                    </h2>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        <span class="ko">숫자가 소수인지 합성수인지 판별하고 약수를 찾아보세요!</span>
+                        <span class="en hidden">Determine if a number is prime or composite and find its factors!</span>
+                    </p>
+                    <button class="btn" id="start-classifier">
+                        <span class="ko">시작하기</span>
+                        <span class="en hidden">Start</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="module-card" id="explanation-module">
+                <div class="module-header">
+                    <h2>
+                        <span class="ko">소수와 합성수 배우기</span>
+                        <span class="en hidden">Learn Prime and Composite Numbers</span>
+                    </h2>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        <span class="ko">소수와 합성수에 대한 재미있는 설명과 연습 문제를 풀어보세요!</span>
+                        <span class="en hidden">Read fun explanations about prime and composite numbers and solve practice problems!</span>
+                    </p>
+                    <button class="btn" id="start-explanation">
+                        <span class="ko">시작하기</span>
+                        <span class="en hidden">Start</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="module-card" id="maze-module">
+                <div class="module-header">
+                    <h2>
+                        <span class="ko">소수 미로</span>
+                        <span class="en hidden">Prime Number Maze</span>
+                    </h2>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        <span class="ko">소수만 밟아 목적지까지 도달하는 미로 게임에 도전해보세요!</span>
+                        <span class="en hidden">Challenge yourself with a maze game where you can only step on prime numbers!</span>
+                    </p>
+                    <button class="btn" id="start-maze">
+                        <span class="ko">시작하기</span>
+                        <span class="en hidden">Start</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="module-card" id="puzzle-module">
+                <div class="module-header">
+                    <h2>
+                        <span class="ko">소수 퍼즐</span>
+                        <span class="en hidden">Prime Puzzle</span>
+                    </h2>
+                </div>
+                <div class="module-content">
+                    <p class="module-description">
+                        <span class="ko">소수인 숫자만 색칠하여 숨겨진 그림을 찾아보세요!</span>
+                        <span class="en hidden">Color only the prime numbers to reveal the hidden image!</span>
+                    </p>
+                    <button class="btn" id="start-puzzle">
+                        <span class="ko">시작하기</span>
+                        <span class="en hidden">Start</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 에라토스테네스의 체 모듈 -->
+        <div class="visualization-container hidden" id="sieve-visualization">
+            <h2 class="visualization-title">
+                <span class="ko">에라토스테네스의 체</span>
+                <span class="en hidden">Sieve of Eratosthenes</span>
+            </h2>
+            
+            <div class="controls">
+                <button class="btn" id="reset-sieve">
+                    <span class="ko">초기화</span>
+                    <span class="en hidden">Reset</span>
+                </button>
+                <button class="btn" id="next-step">
+                    <span class="ko">다음 단계</span>
+                    <span class="en hidden">Next Step</span>
+                </button>
+                <button class="btn" id="auto-play">
+                    <span class="ko">자동 실행</span>
+                    <span class="en hidden">Auto Play</span>
+                </button>
+            </div>
+            
+            <div class="sieve-container" id="sieve-grid"></div>
+            
+            <div class="explanation">
+                <h3 class="explanation-title">
+                    <span class="ko">현재 단계 설명</span>
+                    <span class="en hidden">Current Step Explanation</span>
+                </h3>
+                <p id="step-explanation">
+                    <span class="ko">에라토스테네스의 체를 시작하려면 '다음 단계' 버튼을 클릭하세요.</span>
+                    <span class="en hidden">Click the 'Next Step' button to start the Sieve of Eratosthenes.</span>
+                </p>
+            </div>
+            
+            <button class="btn" id="back-to-modules" style="margin-top: 20px;">
+                <span class="ko">모듈 목록으로 돌아가기</span>
+                <span class="en hidden">Back to Modules</span>
+            </button>
+        </div>
+        
+        <!-- 숫자 분류기 모듈 -->
+        <div class="classifier-container hidden" id="classifier-container">
+            <div class="classifier-header">
+                <h2>
+                    <span class="ko">숫자 분류기</span>
+                    <span class="en hidden">Number Classifier</span>
+                </h2>
+                <p>
+                    <span class="ko">숫자를 입력하면 소수인지 합성수인지 판별하고 약수를 찾아드립니다.</span>
+                    <span class="en hidden">Enter a number to determine if it's prime or composite and find its factors.</span>
+                </p>
+            </div>
+            
+            <div class="classifier-form">
+                <input type="number" id="number-input" class="classifier-input" min="0" max="1000" placeholder="1-1000">
+                <button class="btn" id="classify-btn">
+                    <span class="ko">판별하기</span>
+                    <span class="en hidden">Classify</span>
+                </button>
+            </div>
+            
+            <div class="classifier-result hidden" id="classifier-result">
+                <h3 class="result-title" id="result-title"></h3>
+                <p id="result-description"></p>
+                
+                <div id="factors-section" class="hidden">
+                    <h4>
+                        <span class="ko">약수</span>
+                        <span class="en hidden">Factors</span>
+                    </h4>
+                    <div class="factors-list" id="factors-list"></div>
+                </div>
+                
+                <div id="prime-factorization-section" class="hidden">
+                    <h4>
+                        <span class="ko">소인수분해</span>
+                        <span class="en hidden">Prime Factorization</span>
+                    </h4>
+                    <p class="prime-factorization" id="prime-factorization"></p>
+                </div>
+            </div>
+            
+            <button class="btn" id="back-from-classifier" style="margin-top: 20px;">
+                <span class="ko">모듈 목록으로 돌아가기</span>
+                <span class="en hidden">Back to Modules</span>
+            </button>
+        </div>
+        
+        <!-- 설명 및 연습 문제 모듈 -->
+        <div class="explanation-container hidden" id="explanation-container">
+            <h2 class="text-center mb-20">
+                <span class="ko">소수와 합성수 배우기</span>
+                <span class="en hidden">Learn Prime and Composite Numbers</span>
+            </h2>
+            
+            <div class="explanation-tabs" id="explanation-tabs">
+                <div class="explanation-tab active" data-topic="basic">
+                    <span class="ko">기본 개념</span>
+                    <span class="en hidden">Basic Concepts</span>
+                </div>
+                <div class="explanation-tab" data-topic="visual">
+                    <span class="ko">시각화</span>
+                    <span class="en hidden">Visualization</span>
+                </div>
+                <div class="explanation-tab" data-topic="stories">
+                    <span class="ko">이야기</span>
+                    <span class="en hidden">Stories</span>
+                </div>
+                <div class="explanation-tab" data-topic="fun_facts">
+                    <span class="ko">재미있는 사실</span>
+                    <span class="en hidden">Fun Facts</span>
+                </div>
+                <div class="explanation-tab" data-topic="exercises">
+                    <span class="ko">연습 문제</span>
+                    <span class="en hidden">Exercises</span>
+                </div>
+            </div>
+            
+            <div class="explanation-content" id="explanation-content"></div>
+            
+            <div class="exercise-container hidden" id="exercise-container">
+                <div class="exercise-controls">
+                    <select id="exercise-level">
+                        <option value="beginner">
+                            <span class="ko">초급</span>
+                            <span class="en hidden">Beginner</span>
+                        </option>
+                        <option value="intermediate">
+                            <span class="ko">중급</span>
+                            <span class="en hidden">Intermediate</span>
+                        </option>
+                        <option value="advanced">
+                            <span class="ko">고급</span>
+                            <span class="en hidden">Advanced</span>
+                        </option>
+                    </select>
+                    <button class="btn" id="next-exercise">
+                        <span class="ko">다음 문제</span>
+                        <span class="en hidden">Next Exercise</span>
+                    </button>
+                </div>
+                
+                <div class="exercise-question" id="exercise-question"></div>
+                <div class="exercise-options" id="exercise-options"></div>
+                <div class="exercise-feedback hidden" id="exercise-feedback"></div>
+            </div>
+            
+            <button class="btn" id="back-from-explanation" style="margin-top: 20px;">
+                <span class="ko">모듈 목록으로 돌아가기</span>
+                <span class="en hidden">Back to Modules</span>
+            </button>
+        </div>
+        
+        <!-- 소수 미로 게임 모듈 -->
+        <div id="maze-container" class="hidden"></div>
+        
+        <!-- 소수 퍼즐 게임 모듈 -->
+        <div id="puzzle-container" class="hidden"></div>
+    </div>
+
+    <!-- 스크립트 파일 -->
+    <script src="js/number_classifier.js"></script>
+    <script src="js/explanations_exercises.js"></script>
+    <script src="js/prime_games.js"></script>
+    <script>
+        // 언어 전환 기능
+        const languageBtns = document.querySelectorAll('.language-btn');
+        const koElements = document.querySelectorAll('.ko');
+        const enElements = document.querySelectorAll('.en');
+        let currentLanguage = 'ko';
+        
+        languageBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                currentLanguage = lang;
+                
+                // 버튼 활성화 상태 변경
+                languageBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 언어 표시 전환
+                if (lang === 'ko') {
+                    koElements.forEach(el => el.classList.remove('hidden'));
+                    enElements.forEach(el => el.classList.add('hidden'));
+                } else {
+                    koElements.forEach(el => el.classList.add('hidden'));
+                    enElements.forEach(el => el.classList.remove('hidden'));
+                }
+                
+                // 게임 언어 설정 업데이트
+                if (mazeGame) {
+                    mazeGame.setLanguage(lang);
+                }
+                if (puzzleGame) {
+                    puzzleGame.setLanguage(lang);
+                }
+                
+                // 설명 및 연습 문제 언어 설정 업데이트
+                if (typeof setLanguage === 'function') {
+                    setLanguage(lang);
+                    updateExplanationContent();
+                    if (currentExercise) {
+                        showExercise(currentExercise);
+                    }
+                }
+            });
+        });
+        
+        // 모듈 전환 기능
+        const modules = document.querySelector('.modules');
+        const sieveVisualization = document.getElementById('sieve-visualization');
+        const classifierContainer = document.getElementById('classifier-container');
+        const explanationContainer = document.getElementById('explanation-container');
+        const mazeContainer = document.getElementById('maze-container');
+        const puzzleContainer = document.getElementById('puzzle-container');
+        
+        // 모든 모듈 숨기기
+        function hideAllModules() {
+            modules.classList.add('hidden');
+            sieveVisualization.classList.add('hidden');
+            classifierContainer.classList.add('hidden');
+            explanationContainer.classList.add('hidden');
+            mazeContainer.classList.add('hidden');
+            puzzleContainer.classList.add('hidden');
+        }
+        
+        // 모듈 목록으로 돌아가기
+        function backToModules() {
+            hideAllModules();
+            modules.classList.remove('hidden');
+        }
+        
+        // 에라토스테네스의 체 모듈
+        document.getElementById('start-sieve').addEventListener('click', () => {
+            hideAllModules();
+            sieveVisualization.classList.remove('hidden');
+            initSieve();
+        });
+        
+        document.getElementById('back-to-modules').addEventListener('click', backToModules);
+        
+        // 숫자 분류기 모듈
+        document.getElementById('start-classifier').addEventListener('click', () => {
+            hideAllModules();
+            classifierContainer.classList.remove('hidden');
+        });
+        
+        document.getElementById('back-from-classifier').addEventListener('click', backToModules);
+        
+        // 설명 및 연습 문제 모듈
+        document.getElementById('start-explanation').addEventListener('click', () => {
+            hideAllModules();
+            explanationContainer.classList.remove('hidden');
+            updateExplanationContent();
+        });
+        
+        document.getElementById('back-from-explanation').addEventListener('click', backToModules);
+        
+        // 소수 미로 게임 모듈
+        let mazeGame;
+        document.getElementById('start-maze').addEventListener('click', () => {
+            hideAllModules();
+            mazeContainer.classList.remove('hidden');
+            
+            if (!mazeGame) {
+                mazeGame = new PrimeMazeGame('maze-container', {
+                    language: currentLanguage,
+                    difficulty: 'beginner'
+                });
+            }
+        });
+        
+        // 소수 퍼즐 게임 모듈
+        let puzzleGame;
+        document.getElementById('start-puzzle').addEventListener('click', () => {
+            hideAllModules();
+            puzzleContainer.classList.remove('hidden');
+            
+            if (!puzzleGame) {
+                puzzleGame = new PrimePuzzleGame('puzzle-container', {
+                    language: currentLanguage,
+                    difficulty: 'beginner',
+                    imageType: 'pattern'
+                });
+            }
+        });
+        
+        // 에라토스테네스의 체 구현
+        const sieveGrid = document.getElementById('sieve-grid');
+        const nextStepBtn = document.getElementById('next-step');
+        const resetSieveBtn = document.getElementById('reset-sieve');
+        const autoPlayBtn = document.getElementById('auto-play');
+        const stepExplanation = document.getElementById('step-explanation');
+        
+        let currentStep = 0;
+        let numbers = [];
+        let autoPlayInterval;
+        let isAutoPlaying = false;
+        
+        function initSieve() {
+            sieveGrid.innerHTML = '';
+            numbers = [];
+            currentStep = 0;
+            
+            // 1부터 100까지의 숫자 생성
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'number-cell';
+                cell.textContent = i;
+                cell.dataset.number = i;
+                
+                cell.addEventListener('click', () => {
+                    toggleNumberInfo(i);
+                });
+                
+                sieveGrid.appendChild(cell);
+                numbers.push({
+                    number: i,
+                    isPrime: i > 1, // 초기에는 1을 제외한 모든 수를 소수로 가정
+                    isCrossed: i === 1 // 1은 소수도 합성수도 아니므로 미리 제외
+                });
+            }
+            
+            updateGrid();
+            updateExplanation();
+        }
+        
+        function toggleNumberInfo(num) {
+            const isPrime = isPrime(num);
+            const factors = getFactors(num);
+            
+            let message;
+            
+            if (currentLanguage === 'ko') {
+                message = `${num}은(는) ${isPrime ? '소수' : '합성수'}입니다.\n`;
+                message += `약수: ${factors.join(', ')}`;
+                if (!isPrime && num > 1) {
+                    const primeFactors = getPrimeFactorizationFormatted(num);
+                    message += `\n소인수분해: ${num} = ${primeFactors}`;
+                }
+            } else {
+                message = `${num} is ${isPrime ? 'a prime' : 'a composite'} number.\n`;
+                message += `Factors: ${factors.join(', ')}`;
+                if (!isPrime && num > 1) {
+                    const primeFactors = getPrimeFactorizationFormatted(num);
+                    message += `\nPrime factorization: ${num} = ${primeFactors}`;
+                }
+            }
+            
+            alert(message);
+        }
+        
+        function nextStep() {
+            if (currentStep === 0) {
+                // 1단계: 1 제외
+                numbers[0].isCrossed = true;
+                currentStep++;
+            } else if (currentStep === 1) {
+                // 2단계: 2의 배수 제외
+                crossOutMultiples(2);
+                currentStep++;
+            } else if (currentStep === 2) {
+                // 3단계: 3의 배수 제외
+                crossOutMultiples(3);
+                currentStep++;
+            } else if (currentStep === 3) {
+                // 4단계: 5의 배수 제외
+                crossOutMultiples(5);
+                currentStep++;
+            } else if (currentStep === 4) {
+                // 5단계: 7의 배수 제외
+                crossOutMultiples(7);
+                currentStep++;
+            } else if (currentStep === 5) {
+                // 6단계: 결과 표시
+                finalizeResults();
+                currentStep++;
+            }
+            
+            updateGrid();
+            updateExplanation();
+            
+            // 모든 단계가 완료되면 자동 실행 중지
+            if (currentStep > 5 && isAutoPlaying) {
+                stopAutoPlay();
+            }
+        }
+        
+        function crossOutMultiples(num) {
+            for (let i = num * 2; i <= 100; i += num) {
+                numbers[i - 1].isPrime = false;
+                numbers[i - 1].isCrossed = true;
+            }
+        }
+        
+        function finalizeResults() {
+            numbers.forEach((item, index) => {
+                if (!item.isCrossed && item.number > 1) {
+                    item.isPrime = true;
+                }
+            });
+        }
+        
+        function updateGrid() {
+            numbers.forEach((item, index) => {
+                const cell = sieveGrid.children[index];
+                
+                cell.classList.remove('prime', 'composite', 'crossed');
+                
+                if (item.isCrossed) {
+                    cell.classList.add('crossed');
+                } else if (currentStep > 5) {
+                    if (item.isPrime) {
+                        cell.classList.add('prime');
+                    } else {
+                        cell.classList.add('composite');
+                    }
+                }
+            });
+        }
+        
+        function updateExplanation() {
+            const koExplanations = [
+                "에라토스테네스의 체를 시작하려면 '다음 단계' 버튼을 클릭하세요.",
+                "1단계: 1은 소수도 합성수도 아니므로 제외합니다.",
+                "2단계: 2는 소수입니다. 2의 모든 배수(4, 6, 8, ...)를 지웁니다.",
+                "3단계: 3은 소수입니다. 3의 모든 배수(6, 9, 12, ...)를 지웁니다.",
+                "4단계: 5는 소수입니다. 5의 모든 배수(10, 15, 20, ...)를 지웁니다.",
+                "5단계: 7은 소수입니다. 7의 모든 배수(14, 21, 28, ...)를 지웁니다.",
+                "완료! 지워지지 않은 모든 숫자(녹색)는 소수입니다. 숫자를 클릭하면 더 자세한 정보를 볼 수 있습니다."
+            ];
+            
+            const enExplanations = [
+                "Click the 'Next Step' button to start the Sieve of Eratosthenes.",
+                "Step 1: Cross out 1 as it is neither prime nor composite.",
+                "Step 2: 2 is prime. Cross out all multiples of 2 (4, 6, 8, ...).",
+                "Step 3: 3 is prime. Cross out all multiples of 3 (6, 9, 12, ...).",
+                "Step 4: 5 is prime. Cross out all multiples of 5 (10, 15, 20, ...).",
+                "Step 5: 7 is prime. Cross out all multiples of 7 (14, 21, 28, ...).",
+                "Complete! All remaining numbers (in green) are prime. Click on any number for more information."
+            ];
+            
+            const koExplanation = document.querySelector('#step-explanation .ko');
+            const enExplanation = document.querySelector('#step-explanation .en');
+            
+            koExplanation.textContent = koExplanations[currentStep];
+            enExplanation.textContent = enExplanations[currentStep];
+        }
+        
+        function resetSieve() {
+            stopAutoPlay();
+            initSieve();
+        }
+        
+        function toggleAutoPlay() {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+        
+        function startAutoPlay() {
+            isAutoPlaying = true;
+            autoPlayBtn.classList.add('active');
+            
+            autoPlayBtn.querySelector(`.${currentLanguage}`).textContent = currentLanguage === 'ko' ? '중지' : 'Stop';
+            
+            autoPlayInterval = setInterval(() => {
+                if (currentStep <= 5) {
+                    nextStep();
+                } else {
+                    stopAutoPlay();
+                }
+            }, 1500);
+        }
+        
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            autoPlayBtn.classList.remove('active');
+            
+            autoPlayBtn.querySelector(`.${currentLanguage}`).textContent = currentLanguage === 'ko' ? '자동 실행' : 'Auto Play';
+            
+            clearInterval(autoPlayInterval);
+        }
+        
+        // 이벤트 리스너 등록
+        nextStepBtn.addEventListener('click', nextStep);
+        resetSieveBtn.addEventListener('click', resetSieve);
+        autoPlayBtn.addEventListener('click', toggleAutoPlay);
+        
+        // 숫자 분류기 구현
+        const numberInput = document.getElementById('number-input');
+        const classifyBtn = document.getElementById('classify-btn');
+        const classifierResult = document.getElementById('classifier-result');
+        const resultTitle = document.getElementById('result-title');
+        const resultDescription = document.getElementById('result-description');
+        const factorsSection = document.getElementById('factors-section');
+        const factorsList = document.getElementById('factors-list');
+        const primeFactorizationSection = document.getElementById('prime-factorization-section');
+        const primeFactorization = document.getElementById('prime-factorization');
+        
+        classifyBtn.addEventListener('click', () => {
+            const num = parseInt(numberInput.value);
+            
+            if (isNaN(num) || num < 0 || num > 1000) {
+                alert(currentLanguage === 'ko' ? 
+                      '1부터 1000 사이의 숫자를 입력해주세요.' : 
+                      'Please enter a number between 1 and 1000.');
+                return;
+            }
+            
+            const classification = classifyNumber(num);
+            const factors = getFactors(num);
+            
+            // 결과 표시
+            classifierResult.classList.remove('hidden');
+            
+            // 분류 결과 제목
+            resultTitle.textContent = currentLanguage === 'ko' ? 
+                `${num}은(는) ${getClassificationText(num, 'ko')}입니다.` : 
+                `${num} is ${getClassificationText(num, 'en')}.`;
+            
+            // 분류 결과 설명
+            resultDescription.textContent = currentLanguage === 'ko' ? 
+                (classification === 'prime' ? 
+                 '소수는 1과 자기 자신으로만 나누어지는 수입니다.' : 
+                 classification === 'composite' ? 
+                 '합성수는 1과 자기 자신 외에 다른 약수를 가지는 수입니다.' : '') : 
+                (classification === 'prime' ? 
+                 'A prime number is only divisible by 1 and itself.' : 
+                 classification === 'composite' ? 
+                 'A composite number has factors other than 1 and itself.' : '');
+            
+            // 약수 표시
+            if (num > 0) {
+                factorsSection.classList.remove('hidden');
+                factorsList.innerHTML = '';
+                
+                factors.forEach(factor => {
+                    const factorItem = document.createElement('div');
+                    factorItem.className = 'factor-item';
+                    factorItem.textContent = factor;
+                    factorsList.appendChild(factorItem);
+                });
+                
+                // 소인수분해 표시 (합성수인 경우)
+                if (classification === 'composite') {
+                    primeFactorizationSection.classList.remove('hidden');
+                    primeFactorization.innerHTML = `${num} = ${getPrimeFactorizationFormatted(num)}`;
+                } else {
+                    primeFactorizationSection.classList.add('hidden');
+                }
+            } else {
+                factorsSection.classList.add('hidden');
+                primeFactorizationSection.classList.add('hidden');
+            }
+        });
+        
+        // 설명 및 연습 문제 구현
+        const explanationTabs = document.getElementById('explanation-tabs');
+        const explanationContent = document.getElementById('explanation-content');
+        const exerciseContainer = document.getElementById('exercise-container');
+        const exerciseLevel = document.getElementById('exercise-level');
+        const nextExerciseBtn = document.getElementById('next-exercise');
+        const exerciseQuestion = document.getElementById('exercise-question');
+        const exerciseOptions = document.getElementById('exercise-options');
+        const exerciseFeedback = document.getElementById('exercise-feedback');
+        
+        let currentTopic = 'basic';
+        let currentExercise = null;
+        
+        // 탭 클릭 이벤트
+        explanationTabs.addEventListener('click', (e) => {
+            const tab = e.target.closest('.explanation-tab');
+            if (!tab) return;
+            
+            const topic = tab.getAttribute('data-topic');
+            
+            // 탭 활성화
+            document.querySelectorAll('.explanation-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // 주제 변경
+            currentTopic = topic;
+            
+            // 내용 업데이트
+            if (topic === 'exercises') {
+                explanationContent.classList.add('hidden');
+                exerciseContainer.classList.remove('hidden');
+                showRandomExercise();
+            } else {
+                explanationContent.classList.remove('hidden');
+                exerciseContainer.classList.add('hidden');
+                updateExplanationContent();
+            }
+        });
+        
+        // 설명 내용 업데이트
+        function updateExplanationContent() {
+            if (currentTopic === 'exercises') return;
+            
+            const explanation = getExplanation(currentTopic);
+            if (!explanation) return;
+            
+            explanationContent.innerHTML = `
+                <h3>${explanation.title}</h3>
+                ${explanation.content}
+            `;
+        }
+        
+        // 난이도 변경 이벤트
+        exerciseLevel.addEventListener('change', showRandomExercise);
+        
+        // 다음 문제 버튼 클릭 이벤트
+        nextExerciseBtn.addEventListener('click', showRandomExercise);
+        
+        // 무작위 연습 문제 표시
+        function showRandomExercise() {
+            const level = exerciseLevel.value;
+            currentExercise = getRandomExercise(level);
+            
+            if (!currentExercise) return;
+            
+            showExercise(currentExercise);
+        }
+        
+        // 연습 문제 표시
+        function showExercise(exercise) {
+            // 문제 표시
+            exerciseQuestion.textContent = exercise.question;
+            
+            // 선택지 표시
+            exerciseOptions.innerHTML = '';
+            exercise.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'exercise-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                optionElement.addEventListener('click', () => {
+                    // 이미 답을 선택한 경우 무시
+                    if (exerciseFeedback.classList.contains('correct') || 
+                        exerciseFeedback.classList.contains('incorrect')) {
+                        return;
+                    }
+                    
+                    // 선택한 답 표시
+                    document.querySelectorAll('.exercise-option').forEach(opt => opt.classList.remove('selected'));
+                    optionElement.classList.add('selected');
+                    
+                    // 정답 확인
+                    const result = gradeExercise(exercise, index);
+                    
+                    // 정답 표시
+                    exerciseFeedback.classList.remove('hidden', 'correct', 'incorrect');
+                    exerciseFeedback.classList.add(result.isCorrect ? 'correct' : 'incorrect');
+                    
+                    exerciseFeedback.textContent = result.explanation;
+                    
+                    // 정답/오답 표시
+                    if (result.isCorrect) {
+                        optionElement.classList.add('correct');
+                    } else {
+                        optionElement.classList.add('incorrect');
+                        document.querySelectorAll('.exercise-option').forEach((opt, idx) => {
+                            if (idx === exercise.answer) {
+                                opt.classList.add('correct');
+                            }
+                        });
+                    }
+                });
+                
+                exerciseOptions.appendChild(optionElement);
+            });
+            
+            // 피드백 초기화
+            exerciseFeedback.classList.add('hidden');
+            exerciseFeedback.classList.remove('correct', 'incorrect');
+            exerciseFeedback.textContent = '';
+        }
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            // 언어 설정
+            if (typeof setLanguage === 'function') {
+                setLanguage(currentLanguage);
+            }
+        });
+    </script>
+</body>
+</html>
